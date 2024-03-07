@@ -1,0 +1,27 @@
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    height: 4rem;
+    
+    font-family:  "Poppins", sans-serif;
+}
+
+.navbar_links{
+    display: flex;
+    gap: 1rem;
+    
+}
+
+.navbar a{
+    color: black;
+}
+
+.nav_logo
+{
+    font-size: 2rem;
+    
+    font-weight: 800;
+}
