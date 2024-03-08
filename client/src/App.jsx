@@ -6,6 +6,8 @@ import './styles/navbar.css';
 import axios from 'axios';
 
 import Home from "./pages/Home";
+import Createpost from "./pages/Createpost";
+import Post from "./pages/Post";
 
 function App() {
 
@@ -28,7 +30,7 @@ function App() {
                         <Link to="/"> Home</Link>
                       </li>
                       <li>
-                        <Link to="/"> Write a Post</Link>
+                        <Link to="/createpost"> Write a Post</Link>
                       </li>
                       <li>
                         <Link to="/"> Log out</Link>
@@ -40,6 +42,8 @@ function App() {
           <div className="content container">
           <Routes>
             <Route path = "/" element={<Home/>}/>
+            <Route path = "/createpost" element={<Createpost/>}/>
+            <Route path = "/post/:id" element={<Post/>}/>
           </Routes>
           </div>
 

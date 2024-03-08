@@ -2,10 +2,12 @@ import '../styles/home.css';
 
 import React, {useEffect, useState, useContext} from "react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 function Home() {
+
+  let navigate = useNavigate();
 
   const [listOfPosts, setListOfPosts] = useState([]);
 
@@ -24,7 +26,10 @@ function Home() {
           return (
             <>
             <div className="post_item">
-              <div className="post_container">
+              <div className="home_post_container" 
+                onClick={ () => {
+                  navigate(`/post/${value.id}`);
+              }}>
                 <div className="post_owner">
                   <i className='bx bxs-user-circle post_owner_icon'></i>
                   {value.username}
