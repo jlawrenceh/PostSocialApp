@@ -1,5 +1,5 @@
 import { useState, useEffect} from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
 import './App.css'
 import './styles/navbar.css';
 
@@ -13,8 +13,10 @@ import Registration from "./pages/Registration";
 import { AuthContext } from "./helpers/AuthContext";
 
 function App() {
-  const [authState, setAuthState] = useState(false);
-  const [authUser, setAuthUser] = useState("");
+  const [authState, setAuthState] = useState({ username: "", id: 0, status: false});
+
+ 
+
   useEffect(() => {
     axios
       .get("http://localhost:3001/auth/auth", {
@@ -24,13 +26,24 @@ function App() {
       })
       .then((response) => {
         if (response.data.error) {
-          setAuthState(false);
+          setAuthState({...authState, status:false});
+           
         } else {
-          setAuthState(true);
+  
+          setAuthState({
+            username: response.data.username,
+            id: response.data.id,
+            status: true,
+          })
           setAuthUser(response.data.username);
         }
       });
   }, []);
+
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    setAuthState(false);
+  }
 
   
   return (
@@ -43,10 +56,10 @@ function App() {
               <div>
               <a className="nav_logo"> Post! </a>
              
-              {authState && (
+              {authState.status && (
                 <>
                   <span> | </span>
-                  <span>{authUser}</span>
+                  <span>{authState.username}</span>
                 </>
               )}
               
@@ -54,16 +67,19 @@ function App() {
              
                 <ul className="navbar_links">
                     <>
-                      <li>
-                        <Link to="/"> Home</Link>
-                      </li>
-                      <li>
-                        <Link to="/createpost"> Write a Post</Link>
-                      </li>
-                      <li>
-                        <Link to="/"> Log out</Link>
-                      </li>
-                      {!authState && (
+                      {authState.status? (
+                      <>
+                        <li>
+                          <Link to="/"> Home</Link>
+                        </li>
+                        <li>
+                          <Link to="/createpost"> Write a Post</Link>
+                        </li>
+                        <li>
+                          <button onClick={logout}> Log out</button>
+                        </li>
+                      </>
+                      ) : (
                       <>
                         <li>
                           <Link to="/login"> Log in</Link>
