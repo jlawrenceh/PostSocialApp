@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes ) => {
         },
 
         postText: {
-            type: DataTypes.STRING(280),
+            type: DataTypes.STRING(600),
             allowNull: false,
         },
 
@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes ) => {
             allowNull: false,
         },
     });
+
+    Posts.associate = (models) => {
+        Posts.hasMany(models.Comments, { 
+            onDelete: "cascade",
+        });
+    };
 
     return Posts;
 }

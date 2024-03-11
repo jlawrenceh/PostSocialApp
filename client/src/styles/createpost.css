@@ -1,0 +1,21 @@
+.formContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.create_title{
+    padding: 0.4rem;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
+.createpost_heading{
+    margin-bottom: 1rem;
+}
+
+.create_content{
+    height: 3rem;
+    vertical-align: top;
+}

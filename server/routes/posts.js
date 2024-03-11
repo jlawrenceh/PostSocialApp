@@ -8,7 +8,7 @@ const validatePostTextLength = (req, res, next) => {
     const { postText } = req.body;
   
     // Set your desired maximum length
-    const maxLength = 280;
+    const maxLength = 600;
   
     if (postText.length > maxLength) {
       return res.status(400).json({ error: 'postText exceeds the maximum length' });
