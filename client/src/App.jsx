@@ -35,7 +35,7 @@ function App() {
             id: response.data.id,
             status: true,
           })
-          setAuthUser(response.data.username);
+      
         }
       });
   }, []);

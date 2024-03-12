@@ -3,10 +3,14 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 
+import { AuthContext } from "../helpers/AuthContext";
+
 import "../styles/createpost.css";
 
 function Createpost() {
 
+    
+    
     const initialValues = {
         title: "",
         postText: "",
@@ -21,7 +25,9 @@ function Createpost() {
 
     const onSubmit = (data) => {
         axios.post("http://localhost:3001/posts", data).then((response) => {
-          console.log(data);
+          
+          data = {...data, username: authState.username};
+          
         });
       };
 
