@@ -10,13 +10,57 @@ function Home() {
   let navigate = useNavigate();
 
   const [listOfPosts, setListOfPosts] = useState([]);
+  const [likedPosts, setLikedPosts] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/Posts").then((response) =>{
+    axios.get("http://localhost:3001/Posts", 
+    {
+      headers: { accessToken: localStorage.getItem("accessToken") },
+    }
+    ).then((response) =>{
       console.log(response.data);
-      setListOfPosts(response.data);
+      setListOfPosts(response.data.listOfPosts);
+      setLikedPosts(response.data.likedPosts.map((like) => {
+        return like.PostId;
+      }));
     });
   }, []);
+
+  const likeAPost = (postId) => {
+    axios
+      .post(
+        "http://localhost:3001/likes",
+        { PostId: postId },
+        { headers: { accessToken: localStorage.getItem("accessToken") } }
+      )
+      .then((response) => {
+        setListOfPosts(
+          listOfPosts.map((post) => {
+            if (post.id === postId) {
+              if (response.data.liked) {
+                return { ...post, Likes: [...post.Likes, 0] };
+              } else {
+                const likesArray = post.Likes;
+                likesArray.pop();
+                return { ...post, Likes: likesArray };
+              }
+            } else {
+              return post;
+            }
+          })
+        );
+
+        if (likedPosts.includes(postId)) {
+          setLikedPosts (
+            likedPosts.filter((id) => {
+              return id!=postId;
+            })
+          );
+        } else {
+          setLikedPosts([...likedPosts, postId]);
+        }
+      });
+  };
 
 
   return (
@@ -43,13 +87,15 @@ function Home() {
                 {value.postText}
                 </div>  
 
-                <div className="post_info">
-                    <div className="likes_no">
+                
+              </div>
+
+              <div className="post_info">
+                    <div className="likes_no" onClick={() => {likeAPost(value.id)}}>
                       <i className='bx bxs-like post_info_icon' ></i>
-                      2 
+                      {value.Likes.length}
                     </div>
                 </div>
-              </div>
             </div>
             </>
           )

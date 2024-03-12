@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 import "../styles/home.css";
@@ -7,65 +7,69 @@ import "../styles/comment.css";
 
 function Post() {
 
+    let navigate = useNavigate();
     let {id} = useParams();
     const [postObject, setPostObject] = useState({});
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
-    
     const {authState} = useContext(AuthContext);
+
+    useEffect(() =>{
+      if (!localStorage.getItem("accessToken")){
+          navigate("/login");
+      }
+    })
 
     useEffect(() => {
         axios.get(`http://localhost:3001/posts/${id}`).then((response) => {
-           console.log(response.data);
            setPostObject(response.data);
-        })
+        });
 
         axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
           setComments(response.data);
         })
-    },[]);
+    },[id]);
 
     const addComment = () => {
       axios
-        .post("http://localhost:3001/comments", 
-        {
-          commentBody: newComment, 
-          PostId: id 
+      .post("http://localhost:3001/comments", {
+        commentBody: newComment,
+        PostId: id,
+      },
+      {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
         },
-        {
-          headers: {
-            accessToken: localStorage.getItem("accessToken"),
-          },
-        })
-        .then((response) => {
-          if ( response.data.error) {
-            console.log(response.data.error);
-          } else {
-            console.log("comment added");
-            const commentToAdd = {
-              commentBody: newComment,
-              username: response.data.username
-            };
-            setComments([...comments, commentToAdd]);
-            setNewComment("");
-          }
-
-        })
-    }
+      }
+      )
+      .then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          const commentToAdd = {
+            commentBody: response.data.commentBody,
+            username: response.data.username,
+            id: response.data.id,
+          };
+          setComments([...comments, commentToAdd]);
+          setNewComment("");
+        }
+      });
+  };
 
     const deleteComment = (id) => {
       axios
-      .delete(`http://localhost:3001/comments/${id}`, {
-        headers: { accessToken: localStorage.getItem("accessToken") },
-      })
-      .then((response) => {
-        setComments(
-          comments.filter((val) => {
-            return val.id != id;
-          })
-        );
-      });
-  };
+        .delete(`http://localhost:3001/comments/${id}`, {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        })
+        .then(() => {
+          setComments(
+            comments.filter((val) => {
+              return val.id != id;
+            })
+          );
+        });
+    };
 
   return (
     <div>
