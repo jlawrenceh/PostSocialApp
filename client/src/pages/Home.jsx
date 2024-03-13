@@ -3,7 +3,8 @@ import '../styles/home.css';
 import React, {useEffect, useState, useContext} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+
+import { AuthContext } from "../helpers/AuthContext";
 
 function Home() {
 
@@ -11,19 +12,25 @@ function Home() {
 
   const [listOfPosts, setListOfPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
+  const {authState} = useContext(AuthContext);
+  
 
   useEffect(() => {
-    axios.get("http://localhost:3001/Posts", 
-    {
-      headers: { accessToken: localStorage.getItem("accessToken") },
+    if(!authState.status){
+      navigate("/login");
+    } else {
+      axios.get("http://localhost:3001/Posts", 
+      {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      }
+      ).then((response) =>{
+        console.log(response.data);
+        setListOfPosts(response.data.listOfPosts);
+        setLikedPosts(response.data.likedPosts.map((like) => {
+          return like.PostId;
+        }));
+      });
     }
-    ).then((response) =>{
-      console.log(response.data);
-      setListOfPosts(response.data.listOfPosts);
-      setLikedPosts(response.data.likedPosts.map((like) => {
-        return like.PostId;
-      }));
-    });
   }, []);
 
   const likeAPost = (postId) => {

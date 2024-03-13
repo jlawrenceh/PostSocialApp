@@ -28,13 +28,15 @@ router.get("/", validateToken, async (req, res) => {
 
 router.get("/:id", async (req,res) => {
     const id = req.params.id;
-    const post = await Posts.findByPk(id);
+    const post = await Posts.findByPk(id , { include: [Likes] });
     res.json(post);
 })
 
-router.post("/", validatePostTextLength, async (req,res) => {
+router.post("/", validatePostTextLength, validateToken, async (req,res) => {
     try{
+        
         const post = req.body;
+        post.username = req.user.username;
         await Posts.create(post);
         res.json(post);
     } catch (error) {
@@ -42,6 +44,18 @@ router.post("/", validatePostTextLength, async (req,res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
     
+});
+
+router.delete("/:postId", validateToken, async (req,res) => {
+    const postId = req.params.postId;
+
+    await Posts.destroy({
+        where: {
+            id: postId
+        }
+    });
+
+    res.json("Deleted Post"); 
 });
 
 module.exports = router;

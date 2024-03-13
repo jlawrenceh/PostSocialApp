@@ -23,6 +23,10 @@ function Post() {
     useEffect(() => {
         axios.get(`http://localhost:3001/posts/${id}`).then((response) => {
            setPostObject(response.data);
+           console.log(response.data);
+           console.log(response.data.postText);
+           console.log(response.data.Likes.length);
+          
         });
 
         axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
@@ -71,13 +75,30 @@ function Post() {
         });
     };
 
+    const deletePost = (id) => {
+      axios.delete(
+        `http://localhost:3001/posts/${id}`, {
+        headers: { accessToken: localStorage.getItem("accessToken") }
+        })
+      .then(()=>{
+        alert("delete success");
+        navigate("/");
+      })
+    }
+
   return (
     <div>
         <div className="post_item">
           <div className="post_container">
             <div className="post_owner">
               <i className='bx bxs-user-circle post_owner_icon'></i>
-              {postObject.username}
+              {postObject.username} 
+              {authState.username === postObject.username && ( 
+              <>
+                <button> edit </button>
+                <button onClick={() => {deletePost(postObject.id) }}> delete </button>
+              </>
+              )}
             </div>
 
             <div className="post_title">
@@ -91,7 +112,8 @@ function Post() {
             <div className="post_info">
                 <div className="likes_no">
                   <i className='bx bxs-like post_info_icon' ></i>
-                  2 
+               
+                  {postObject.Likes ? postObject.Likes.length : 0}
                 </div>
             </div>
           </div>

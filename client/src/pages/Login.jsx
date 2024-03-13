@@ -1,4 +1,4 @@
-import React, {useState, useContext } from 'react';
+import React, {useState, useContext, useEffect } from 'react';
 import "../styles/login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +8,20 @@ function Login() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setAuthState } = useContext(AuthContext);
+  const { authState, setAuthState } = useContext(AuthContext);
 
   let navigate = useNavigate();
+
+
+  //to be updated 
+  useEffect(() => {
+    if(authState.status)
+    {
+      navigate("/");
+    }
+  })
+
+
   const login = () => {
     const data = { username: username, password: password };
     axios.post("http://localhost:3001/auth/login", data).then((response) => {
