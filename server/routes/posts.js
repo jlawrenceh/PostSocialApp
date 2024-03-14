@@ -34,13 +34,15 @@ router.get("/:id", async (req,res) => {
 
 router.get("/byUserId/:id", async (req,res) => {
     const id = req.params.id;
-    const listOfPosts = await Posts.findAll({where: {UserId: id}});
+    const listOfPosts = await Posts.findAll({
+        where: {UserId: id},
+        include: [Likes]
+    });
     res.json(listOfPosts);
 })
 
 router.post("/", validatePostTextLength, validateToken, async (req,res) => {
     try{
-        
         const post = req.body;
         post.username = req.user.username;
         post.UserId = req.user.id;
@@ -50,7 +52,6 @@ router.post("/", validatePostTextLength, validateToken, async (req,res) => {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-    
 });
 
 router.delete("/:postId", validateToken, async (req,res) => {
@@ -64,5 +65,20 @@ router.delete("/:postId", validateToken, async (req,res) => {
 
     res.json("Deleted Post"); 
 });
+
+
+router.put("/newtitle", validateToken, async (req,res) => {
+    const { newTitle, id } = req.body
+    await Posts.update({title: newTitle},{where: {id: id}});
+    res.json(newTitle);
+});
+
+
+router.put("/newposttext", validatePostTextLength, validateToken, async (req,res) => {
+    const { postText, id } = req.body
+    await Posts.update({postText: postText},{where: {id: id}});
+    res.json(postText);
+})
+
 
 module.exports = router;

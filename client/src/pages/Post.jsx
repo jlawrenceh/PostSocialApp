@@ -86,6 +86,43 @@ function Post() {
       })
     }
 
+    const editPost = (option) => {
+      if (option === "title") {
+          let newTitle = prompt("Enter new title:");
+          axios.put(
+            "http://localhost:3001/posts/newtitle", 
+            {
+              newTitle: newTitle,
+              id: id,
+            },
+            {
+              headers: 
+              { 
+                accessToken: localStorage.getItem("accessToken") 
+              }
+            }
+          )
+          setPostObject({...postObject, title: newTitle})
+      } else {
+        let newPostText = prompt("Enter new post text:");
+        axios.put(
+          "http://localhost:3001/posts/newposttext", 
+          {
+            postText: newPostText,
+            id: id,
+          },
+          {
+            headers: 
+            { 
+              accessToken: localStorage.getItem("accessToken") 
+            }
+          }
+        )
+        setPostObject({...postObject, postText: postText})
+      }
+
+      
+    };
   return (
     <div>
         <div className="post_item">
@@ -95,17 +132,24 @@ function Post() {
               {postObject.username} 
               {authState.username === postObject.username && ( 
               <>
-                <button> edit </button>
                 <button onClick={() => {deletePost(postObject.id) }}> delete </button>
               </>
               )}
             </div>
 
-            <div className="post_title">
+            <div className="post_title" onClick={() => {
+              if (authState.username === postObject.username) {
+                editPost("title");
+              }
+            }}>
               {postObject.title}
             </div>
 
-            <div className="post_content">
+            <div className="post_content " onClick={() => {
+               if (authState.username === postObject.username) {
+                editPost("body");
+              }
+            }}>
             {postObject.postText}
             </div>  
 

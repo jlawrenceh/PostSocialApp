@@ -1,8 +1,7 @@
 import '../styles/home.css';
-
 import React, {useEffect, useState, useContext} from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { AuthContext } from "../helpers/AuthContext";
 
@@ -78,22 +77,25 @@ function Home() {
             <>
             <div className="post_item">
               <div className="home_post_container" 
-                onClick={ () => {
-                  navigate(`/post/${value.id}`);
-              }}>
+                >
                 <div className="post_owner">
                   <i className='bx bxs-user-circle post_owner_icon'></i>
-                  {value.username}
+                  <Link to = {`/profile/${value.UserId}`}>
+                    {value.username}
+                  </Link>
                 </div>
 
-                <div className="post_title">
-                  {value.title}
+                <div onClick ={ () => {
+                  navigate(`/post/${value.id}`);
+              }}>
+                  <div className="post_title">
+                    {value.title}
+                  </div>
+
+                  <div className="post_content">
+                  {value.postText}
+                  </div>  
                 </div>
-
-                <div className="post_content">
-                {value.postText}
-                </div>  
-
                 
               </div>
 
