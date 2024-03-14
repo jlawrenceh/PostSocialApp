@@ -17,7 +17,7 @@ import { AuthContext } from "./helpers/AuthContext";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: 0, status: false});
-
+  const [numberOfPosts, setNumberOfPosts] = useState(0);
  
 
   useEffect(() => {
@@ -42,6 +42,16 @@ function App() {
         }
       });
   }, []);
+
+  useEffect(() => {
+    axios.get(`http://localhost:3001/posts/numberofposts/${authState.id}`, {
+      headers: { accessToken: localStorage.getItem("accessToken") },
+    })
+    .then((response) => {
+      setNumberOfPosts(response.data);
+    }) 
+  },[authState])
+  
 
   const logout = () => {
     localStorage.removeItem("accessToken");
@@ -96,17 +106,48 @@ function App() {
                 </ul>
             </div>
           </header>
-          <div className="content container">
-          <Routes>
-            <Route path = "/" element={<Home/>}/>
-            <Route path = "/createpost" element={<Createpost/>}/>
-            <Route path = "/post/:id" element={<Post/>}/>
-            <Route path = "/login" element={<Login/>}/>
-            <Route path = "/register" element={<Registration/>}/>
-            <Route path = "/profile/:id" element={<Profile/>}/>
-            <Route path = "/changepassword" element={<Changepassword/>}/>
-            <Route path = "*" element={<PageNotFound/>}/>
-          </Routes>
+         
+          <div className="page_body">
+          {/*            
+            <div className="side_div">
+             {authState.status && (
+              <>
+               <div className="side_div_content">
+                <div className="side_div_userinfo">
+                  <i className='bx bxs-user-circle post_owner_icon'/>
+                  {authState.username}
+                </div>
+
+                <div className="side_div_postsinfo">
+                  <span>Posts</span>
+                  <span>{numberOfPosts}</span>
+                </div>
+
+                <Link to = {`/profile/${authState.id}`}>
+                      View my posts
+                </Link>
+                <Link to="/changepassword"> Change Password</Link>
+                
+               </div>
+               </>
+               
+             )}
+            </div>
+            */}  
+            
+            <div className="content container">
+            <Routes>
+              <Route path = "/" element={<Home/>}/>
+              <Route path = "/createpost" element={<Createpost/>}/>
+              <Route path = "/post/:id" element={<Post/>}/>
+              <Route path = "/login" element={<Login/>}/>
+              <Route path = "/register" element={<Registration/>}/>
+              <Route path = "/profile/:id" element={<Profile/>}/>
+              <Route path = "/changepassword" element={<Changepassword/>}/>
+              <Route path = "*" element={<PageNotFound/>}/>
+            </Routes>
+            </div>
+          
           </div>
 
         </Router>

@@ -89,10 +89,31 @@ function Post() {
     const editPost = (option) => {
       if (option === "title") {
           let newTitle = prompt("Enter new title:");
+          if (newTitle!==null)
+          {
+            axios.put(
+              "http://localhost:3001/posts/newtitle", 
+              {
+                newTitle: newTitle,
+                id: id,
+              },
+              {
+                headers: 
+                { 
+                  accessToken: localStorage.getItem("accessToken") 
+                }
+              }
+            )
+            setPostObject({...postObject, title: newTitle})
+          }
+      } else {
+        let newPostText = prompt("Enter new post text:");
+        if (newPostText!==null)
+        {
           axios.put(
-            "http://localhost:3001/posts/newtitle", 
+            "http://localhost:3001/posts/newposttext", 
             {
-              newTitle: newTitle,
+              postText: newPostText,
               id: id,
             },
             {
@@ -102,23 +123,8 @@ function Post() {
               }
             }
           )
-          setPostObject({...postObject, title: newTitle})
-      } else {
-        let newPostText = prompt("Enter new post text:");
-        axios.put(
-          "http://localhost:3001/posts/newposttext", 
-          {
-            postText: newPostText,
-            id: id,
-          },
-          {
-            headers: 
-            { 
-              accessToken: localStorage.getItem("accessToken") 
-            }
-          }
-        )
-        setPostObject({...postObject, postText: postText})
+          setPostObject({...postObject, postText: postText})
+        }
       }
 
       

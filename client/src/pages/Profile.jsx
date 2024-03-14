@@ -26,7 +26,7 @@ function Profile() {
   
   return (
     <div>
-        <h1>user: {username} </h1>
+        <h1>Posts by {username} </h1>
         {authState.username===username && (
           <>
            <button onClick={() => navigate("/changepassword")}>change my password</button>

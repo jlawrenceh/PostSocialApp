@@ -81,4 +81,10 @@ router.put("/newposttext", validatePostTextLength, validateToken, async (req,res
 })
 
 
+router.get("/numberofposts/:id" ,validateToken, async (req,res) => {
+    const id = req.params.id
+    const numberOfPosts = await Posts.count({where: {UserId: id}});
+    res.json(numberOfPosts);
+})
+
 module.exports = router;
