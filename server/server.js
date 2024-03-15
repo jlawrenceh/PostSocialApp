@@ -8,9 +8,12 @@ app.use(express.json());
 const db = require("./models");
 
 // Routers
-app.get('/test', (req, res) => {
-    res.json('test ok');
-});
+app.get('/health', (req, res) => {
+    res.json({
+        About: "API Server For Socials",
+        Version: "1.0"
+    })
+})
 
 const postRouter = require("./routes/posts");
 app.use("/posts", postRouter);
