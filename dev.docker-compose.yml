@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: frontend
+    build: 
+      context: ./client
+      dockerfile: dev.Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - backend
+  backend:
+    container_name: backend
+    build: 
+      context: ./server
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./server:/app
+    ports:
+      - 3001:3001
+    depends_on:
+      - database
+    restart: on-failure
+  database:
+    container_name: database
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=socials
+      - MYSQL_USER=root
+    command: --init-file /data/application/init.sql
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/data/application/init.sql
+    restart: always
+
+volumes:
+  mysql_data:
+   driver: local
