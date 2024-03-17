@@ -19,7 +19,6 @@ function App() {
   const [authState, setAuthState] = useState({ username: "", id: 0, status: false});
   const [numberOfPosts, setNumberOfPosts] = useState(0);
  
-
   useEffect(() => {
     axios
       .get("http://localhost:3001/auth/auth", {
@@ -30,9 +29,7 @@ function App() {
       .then((response) => {
         if (response.data.error) {
           setAuthState({...authState, status:false});
-           
         } else {
-  
           setAuthState({
             username: response.data.username,
             id: response.data.id,
@@ -42,7 +39,7 @@ function App() {
         }
       });
   }, []);
-
+/*
   useEffect(() => {
     axios.get(`http://localhost:3001/posts/numberofposts/${authState.id}`, {
       headers: { accessToken: localStorage.getItem("accessToken") },
@@ -51,7 +48,7 @@ function App() {
       setNumberOfPosts(response.data);
     }) 
   },[authState])
-  
+  */
 
   const logout = () => {
     localStorage.removeItem("accessToken");

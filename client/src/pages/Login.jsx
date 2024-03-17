@@ -12,7 +12,6 @@ function Login() {
 
   let navigate = useNavigate();
 
-
   //to be updated 
   useEffect(() => {
     if(authState.status)

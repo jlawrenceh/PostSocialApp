@@ -26,7 +26,6 @@ function Post() {
            console.log(response.data);
            console.log(response.data.postText);
            console.log(response.data.Likes.length);
-          
         });
 
         axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
